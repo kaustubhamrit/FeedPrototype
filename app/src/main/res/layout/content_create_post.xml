@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.CreatePostActivity"
+    android:background="@color/colorPrimary"
+    tools:showIn="@layout/activity_create_post">
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_caption"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/user_animation"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:hint="Enter your post text here"
+        android:background="@null"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textAlignment="center"
+        android:cursorVisible="true"
+        android:layout_centerInParent="true"
+        android:maxLength="50"
+        android:layout_marginTop="16dp"
+        android:textCursorDrawable="@null"
+        android:textColorHint="#f2f2f2"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_view"
+        android:layout_marginTop="16dp"
+        android:layout_above="@+id/post_caption"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="50dp"
+        android:id="@+id/progress"
+        android:textSize="24sp"
+        android:visibility="gone"
+        tools:text = "Uploaded 50%"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/upload_image"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Image"
+        android:textColor="#FFFFFF"
+        android:id="@+id/upload_image"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/post_caption"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:background="@color/colorPrimaryDark"
+        />
+</RelativeLayout>

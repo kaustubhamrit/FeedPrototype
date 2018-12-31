@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FeedPrototype</string>
+    <string name="action_settings">Settings</string>
+    <string name="enter_user_id">Enter User Id</string>
+    <string name="title_activity_feed">FeedActivity</string>
+    <string name="title_activity_create_post">CreatePostActivity</string>
+</resources>

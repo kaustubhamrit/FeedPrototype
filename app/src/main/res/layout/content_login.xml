@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.LoginActivity"
+    android:background="@color/colorPrimary"
+    tools:showIn="@layout/activity_login">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/app_title"
+    android:layout_above="@id/user_animation"
+    android:textColor="#FFFFFF"
+    android:textSize="40sp"
+    android:text="My Feed"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_animation"
+        android:layout_marginTop="12dp"
+        android:layout_centerInParent="true"
+        app:lottie_rawRes="@raw/user_profile_animation"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_id_input"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/user_animation"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:hint="@string/enter_user_id"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:maxLines="1"
+        android:background="@null"
+        android:textAlignment="center"
+        android:cursorVisible="true"
+        android:layout_marginTop="16dp"
+        android:textCursorDrawable="@null"
+        android:textColorHint="#f2f2f2"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_id_input"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/login_button"
+        android:textColor="#FFFFFF"
+        android:elevation="8dp"
+        android:layout_marginTop="28dp"
+        android:text="GET STARTED!"
+        android:background="@color/colorPrimaryDark"
+        android:padding="8dp"/>
+
+</RelativeLayout>
