@@ -29,6 +29,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHolder> {
@@ -43,8 +44,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
     public void addPosts(ArrayList<Post> posts) {
         int loadPosition = this.posts.size();
         for(int i =0;i<posts.size();i++){
-            this.posts.add(posts.get(i));
-            notifyItemInserted(loadPosition+i);
+            if(!this.posts.contains(posts.get(i))) {
+                this.posts.add(posts.get(i));
+                notifyItemInserted(loadPosition + i);
+            }
         }
     }
 
@@ -155,7 +158,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                 }
             });
 
-            timeStamp.setText(getTime(post.getTimeStamp()));
+            timeStamp.setText(getTime(-(post.timeStamp)));
         }
 
         private String getTime(Long timeStamp){

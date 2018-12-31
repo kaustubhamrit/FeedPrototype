@@ -7,7 +7,7 @@ public class Post {
     private String postText;
     private String userId;
     private String imageUrl = "";
-    private Long timeStamp;
+    public Long timeStamp;
 
     public String getPushKey() {
         return pushKey;
@@ -51,7 +51,7 @@ public class Post {
     }
 
     public void setTimeStamp(Long timeStamp) {
-        this.timeStamp = -1 * timeStamp;
+        this.timeStamp = timeStamp;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.example.gs63.feedprototype.repository;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.airbnb.lottie.L;
 import com.example.gs63.feedprototype.datamodels.Post;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,7 +21,7 @@ public class FirebaseFeedServices {
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private Long lastFetchedTimeStamp;
+    private Long lastFetchedKey;
     MutableLiveData<ArrayList<Post>> posts = new MutableLiveData<>();
     ValueEventListener valueEventListener;
 
@@ -36,13 +37,10 @@ public class FirebaseFeedServices {
                     list.add(child.getValue(Post.class));
                 }
 
-                if (list.size() > 0 && list.size()%6==0) {
-                    lastFetchedTimeStamp = list.get(list.size()-1).getTimeStamp();
+                if (list.size() > 0) {
+                    lastFetchedKey = list.get(list.size() - 1).getTimeStamp();
                 }
-                else{
-                    lastFetchedTimeStamp= Long.MAX_VALUE;
-                }
-                if( list.size() >= 5) {
+                if (list.size() > 0) {
                     list.remove(list.size() - 1);
                 }
                 posts.setValue(list);
@@ -53,23 +51,24 @@ public class FirebaseFeedServices {
 
             }
         };
+
+
     }
 
-    public MutableLiveData<ArrayList<Post>> fetchPosts(){
-        if(lastFetchedTimeStamp != null) {
-            databaseReference.orderByChild("timeStamp").startAt(lastFetchedTimeStamp).limitToFirst(6).addListenerForSingleValueEvent(valueEventListener);
-        }
-        else{
-            databaseReference.orderByChild("timeStamp").limitToFirst(6).addListenerForSingleValueEvent(valueEventListener);
+    public MutableLiveData<ArrayList<Post>> fetchPosts() {
+        if (lastFetchedKey != null) {
+            databaseReference.orderByChild("timeStamp").startAt(lastFetchedKey).limitToFirst(6).addValueEventListener(valueEventListener);
+        } else {
+            databaseReference.orderByChild("timeStamp").limitToFirst(6).addValueEventListener(valueEventListener);
         }
         return posts;
     }
 
-    public void removePost(Post post){
+    public void removePost(Post post) {
         databaseReference.child(post.getPushKey()).removeValue();
     }
 
-    public void updatePost(Post post){
+    public void updatePost(Post post) {
         databaseReference.child(post.getPushKey()).setValue(post);
     }
 }

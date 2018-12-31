@@ -52,9 +52,14 @@ public class FeedActivity extends AppCompatActivity {
         Fade fade = new Fade();
         fade.excludeTarget(android.R.id.statusBarBackground, true);
         fade.excludeTarget(android.R.id.navigationBarBackground, true);
-
         getWindow().setEnterTransition(fade);
         getWindow().setExitTransition(fade);
+        postsList.post(new Runnable() {
+            @Override
+            public void run() {
+                postsList.smoothScrollToPosition(0);
+            }
+        });
     }
 
     private void bindView(){
@@ -79,7 +84,7 @@ public class FeedActivity extends AppCompatActivity {
                 }
         });
 
-                postsList.setItemAnimator(new SlideInLeftAnimator());
+        postsList.setItemAnimator(new SlideInLeftAnimator());
         FloatingActionButton createPost = (FloatingActionButton) findViewById(R.id.fab);
         createPost.setTransitionName("Create_post");
         createPost.setTag("Create_post");
