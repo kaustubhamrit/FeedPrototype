@@ -40,20 +40,34 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
     }
 
     private ArrayList<Post> posts = new ArrayList<>();
+    private FeedViewModel feedViewModel;
 
     public void addPosts(ArrayList<Post> posts) {
         int loadPosition = this.posts.size();
-        for(int i =0;i<posts.size();i++){
-            if(!this.posts.contains(posts.get(i))) {
+        for (int i = 0; i < posts.size(); i++) {
+            if (!this.posts.contains(posts.get(i))) {
                 this.posts.add(posts.get(i));
                 notifyItemInserted(loadPosition + i);
             }
         }
     }
 
-    public PostsAdapter() {
+    public void addPostsToTop(ArrayList<Post> posts) {
+        for (int i = 0; i < posts.size(); i++) {
+            if (!this.posts.contains(posts.get(i))) {
+                this.posts.add(0, posts.get(i));
+                notifyItemInserted(i);
+            }
+        }
+    }
+
+
+
+
+    public PostsAdapter(FeedViewModel feedViewModel) {
         super();
         hideKeyboard.setValue(false);
+        this.feedViewModel = feedViewModel;
     }
 
     @NonNull
@@ -82,7 +96,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         private View itemView;
         private ImageView delete;
         private TextView edit;
-        private FeedViewModel feedViewModel;
         private EditText editText;
 
 
@@ -96,13 +109,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             edit = itemView.findViewById(R.id.edit);
             delete = itemView.findViewById(R.id.delete);
             editText = itemView.findViewById(R.id.edit_text);
-            feedViewModel = new FeedViewModel();
-            feedViewModel.init();
-
         }
 
         public void bindData(final Post post){
+            //resetting values to default because of recycler view behaviour
+            postImage.setVisibility(View.GONE);
+            edit.setVisibility(View.GONE);
+            delete.setVisibility(View.GONE);
             postImage.setImageBitmap(null);
+            editText.setText("");
+            editText.setVisibility(View.GONE);
+            editText.clearFocus();
+            postCaption.setText("");
+
             Typeface boldTypeface = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Lato-Bold.ttf");
             userId.setTypeface(boldTypeface);
             userId.setText(post.getUserId());
@@ -113,7 +132,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             }
             if(SessionManager.getUserId().equalsIgnoreCase(post.getUserId())){
                 edit.setVisibility(View.VISIBLE);
-                delete.setVisibility(View.VISIBLE);
+                if(post.getImageUrl().isEmpty()) {
+                    delete.setVisibility(View.VISIBLE);
+                }
             }
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,7 +155,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                         int index = posts.indexOf(post);
                         post.setPostText(editText.getText().toString());
                         feedViewModel.updatePost(post);
-                        post.setTimeStamp(System.currentTimeMillis());
+                        post.setTimeStamp(-1 * System.currentTimeMillis());
                         editText.setVisibility(View.GONE);
                         postCaption.setVisibility(View.VISIBLE);
                         notifyItemChanged(index);
@@ -149,12 +170,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                 @Override
                 public void onClick(View v) {
                     editText.setHint(postCaption.getText().toString());
+                    if(postCaption.getText().toString().trim().isEmpty()){
+                        editText.setHint("Update your post caption here!");
+                    }
                     postCaption.setVisibility(View.GONE);
                     editText.setVisibility(View.VISIBLE);
                     editText.requestFocus();
                     editText.setFocusable(true);
                     editText.setFocusableInTouchMode(true);
                     editText.setCursorVisible(true);
+                    showKeyboard(editText);
                 }
             });
 
@@ -167,5 +192,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             return  sdf.format(resultdate);
         }
 
+    }
+
+    public void showKeyboard(EditText editText) {
+        editText.requestFocus();
+        editText.setFocusableInTouchMode(true);
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, 0);
     }
 }

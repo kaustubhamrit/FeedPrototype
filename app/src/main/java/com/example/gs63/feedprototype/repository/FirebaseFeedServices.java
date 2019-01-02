@@ -19,15 +19,14 @@ import java.util.List;
 
 public class FirebaseFeedServices {
 
-    private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private Long lastFetchedKey;
-    MutableLiveData<ArrayList<Post>> posts = new MutableLiveData<>();
-    ValueEventListener valueEventListener;
+    private MutableLiveData<ArrayList<Post>> posts = new MutableLiveData<>();
+    private ValueEventListener valueEventListener;
 
 
     public FirebaseFeedServices() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("/posts");
         valueEventListener = new ValueEventListener() {
             @Override

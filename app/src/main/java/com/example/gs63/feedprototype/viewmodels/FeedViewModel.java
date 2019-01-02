@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class FeedViewModel extends ViewModel {
 
-    public MutableLiveData<ArrayList<Post>> posts = new MutableLiveData<>();
     private FirebaseFeedServices fetchPostsService;
+    public MutableLiveData<Boolean> updatingPost = new MutableLiveData<>();
 
     public FeedViewModel() {
     }
@@ -29,6 +29,7 @@ public class FeedViewModel extends ViewModel {
     }
 
     public void updatePost(Post post){
+        updatingPost.postValue(true);
         fetchPostsService.updatePost(post);
     }
 }

@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.transition.Fade;
 import android.view.KeyEvent;
 import android.view.View;
@@ -42,6 +43,7 @@ public class CreatePostActivity extends AppCompatActivity {
     private CreatePostViewModel createPostViewModel;
     private EditText postCaption;
     private TextView progressBar;
+    private boolean postCreated = false;
 
 
     @Override
@@ -93,6 +95,7 @@ public class CreatePostActivity extends AppCompatActivity {
         @Override
         public void onClick (View v){
         if (postCaption.getText() != null && !postCaption.getText().toString().isEmpty()) {
+            postCreated = true;
             createPostViewModel.createPost(postCaption.getText().toString().trim()).observe(CreatePostActivity.this, new Observer<Boolean>() {
                 @Override
                 public void onChanged(@Nullable Boolean aBoolean) {
@@ -173,7 +176,15 @@ public class CreatePostActivity extends AppCompatActivity {
 
     @Override
     public void finishAfterTransition() {
-        setResult(RESULT_OK, null);
+        Intent intent = new Intent();
+        if(postCreated){
+        intent.putExtra("POST_CREATED",true);
+        postCreated = false;
+        }
+        else{
+            intent.putExtra("POST_CREATED",false);
+        }
+        setResult(RESULT_OK, intent);
         super.finishAfterTransition();
     }
 
@@ -190,9 +201,17 @@ public class CreatePostActivity extends AppCompatActivity {
                         Glide.with(CreatePostActivity.this).load(createPostViewModel.imageUri).into(uploadedImage);
                         uploadedImage.setVisibility(View.VISIBLE);
                         createPostViewModel.setImageUrl();
+                        //setting max length of caption to 50 in case of image posts
+                        int maxLength = 50;
+                        postCaption.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
+
+                        if(postCaption.getText().toString().length()>50){
+                            Toast.makeText(CreatePostActivity.this,"Text for image post cannot be greater than 50 characters.Truncating post caption to 50 characters",Toast.LENGTH_LONG).show();
+                            postCaption.setText(postCaption.getText().toString().substring(0,50));
+                        }
                     }
                     else{
-                        Toast.makeText(CreatePostActivity.this,"Oops!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(CreatePostActivity.this,"Oops!Image could'nt be uploaded",Toast.LENGTH_LONG).show();
                     }
                 }
             });

@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.util.Util;
@@ -35,20 +36,25 @@ public class FeedActivity extends AppCompatActivity {
     private PostsAdapter postsAdapter;
     private FeedViewModel mFeedViewModel;
     private LottieAnimationView loader;
+    private boolean itemUpdated = false;
+    private boolean itemCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in_right, R.anim.anim_slide_out_left);
         setContentView(R.layout.activity_feed);
-        bindView();
         initializeViewModel();
+        bindView();
     }
 
     @Override
     public void onActivityReenter(int resultCode, Intent data) {
         super.onActivityReenter(resultCode, data);
         overridePendingTransition(0,0);
+        if(data.getBooleanExtra("POST_CREATED",false)){
+            itemCreated = true;
+        }
         Fade fade = new Fade();
         fade.excludeTarget(android.R.id.statusBarBackground, true);
         fade.excludeTarget(android.R.id.navigationBarBackground, true);
@@ -57,7 +63,7 @@ public class FeedActivity extends AppCompatActivity {
         postsList.post(new Runnable() {
             @Override
             public void run() {
-                postsList.smoothScrollToPosition(0);
+                postsList.scrollToPosition(0);
             }
         });
     }
@@ -66,7 +72,7 @@ public class FeedActivity extends AppCompatActivity {
         loader = findViewById(R.id.loader);
         postsList = findViewById(R.id.posts_list);
         postsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        postsAdapter = new PostsAdapter();
+        postsAdapter = new PostsAdapter(mFeedViewModel);
         postsList.setAdapter(postsAdapter);
         postsAdapter.hideKeyboard.observe(this, new Observer<Boolean>() {
             @Override
@@ -82,6 +88,14 @@ public class FeedActivity extends AppCompatActivity {
             public void onLoadMore(int page, int totalItemsCount) {
                 mFeedViewModel.fetchPosts();
                 }
+
+            @Override
+            public void onScrolled(RecyclerView view, int dx, int dy) {
+                super.onScrolled(view, dx, dy);
+                if(dy>50){
+                    hideKeyBoard();
+                }
+            }
         });
 
         postsList.setItemAnimator(new SlideInLeftAnimator());
@@ -107,9 +121,27 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable ArrayList<Post> posts) {
                 if(posts!=null) {
-                    postsAdapter.addPosts(posts);
-                    loader.cancelAnimation();
-                    loader.setVisibility(View.GONE);
+                    if(!itemUpdated && !itemCreated) {
+                        postsAdapter.addPosts(posts);
+                        loader.cancelAnimation();
+                        loader.setVisibility(View.GONE);
+                    }
+                    else if(itemUpdated){
+                        itemUpdated = false;
+                    }
+                    else{
+                        postsAdapter.addPostsToTop(posts);
+                        itemCreated = false;
+                    }
+                }
+            }
+        });
+
+        mFeedViewModel.updatingPost.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if(aBoolean != null && aBoolean){
+                    itemUpdated = true;
                 }
             }
         });
