@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:hint="Enter your post text here"
+        android:hint="Enter your post text here."
         android:background="@null"
         android:imeOptions="actionDone"
         android:inputType="text"

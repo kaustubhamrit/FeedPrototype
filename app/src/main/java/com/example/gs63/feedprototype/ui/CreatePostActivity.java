@@ -194,28 +194,29 @@ public class CreatePostActivity extends AppCompatActivity {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // put this data in view model
-            createPostViewModel.setImageUri(data.getData()).observe(CreatePostActivity.this, new Observer<Boolean>() {
-                @Override
-                public void onChanged(@Nullable Boolean aBoolean) {
-                    if (aBoolean != null && aBoolean) {
-                        Glide.with(CreatePostActivity.this).load(createPostViewModel.imageUri).into(uploadedImage);
-                        uploadedImage.setVisibility(View.VISIBLE);
-                        createPostViewModel.setImageUrl();
-                        //setting max length of caption to 50 in case of image posts
-                        int maxLength = 50;
-                        postCaption.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
+            if(!data.getData().toString().isEmpty()) {
+                createPostViewModel.setImageUri(data.getData()).observe(CreatePostActivity.this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean aBoolean) {
+                        if (aBoolean != null && aBoolean) {
+                            Glide.with(CreatePostActivity.this).load(createPostViewModel.imageUri).into(uploadedImage);
+                            uploadedImage.setVisibility(View.VISIBLE);
+                            createPostViewModel.setImageUrl();
+                            //setting max length of caption to 50 in case of image posts
+                            int maxLength = 50;
+                            postCaption.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
 
-                        if(postCaption.getText().toString().length()>50){
-                            Toast.makeText(CreatePostActivity.this,"Text for image post cannot be greater than 50 characters.Truncating post caption to 50 characters",Toast.LENGTH_LONG).show();
-                            postCaption.setText(postCaption.getText().toString().substring(0,50));
+                            if (postCaption.getText().toString().length() > 50) {
+                                Toast.makeText(CreatePostActivity.this, "Text for image post cannot be greater than 50 characters.Truncating post caption to 50 characters", Toast.LENGTH_LONG).show();
+                                postCaption.setText(postCaption.getText().toString().substring(0, 50));
+                            }
+                        } else {
+                            Toast.makeText(CreatePostActivity.this, "Oops!Image could'nt be uploaded", Toast.LENGTH_LONG).show();
                         }
                     }
-                    else{
-                        Toast.makeText(CreatePostActivity.this,"Oops!Image could'nt be uploaded",Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            createPostViewModel.imageExtension = getImageExtension();
+                });
+                createPostViewModel.imageExtension = getImageExtension();
+            }
         }
     }
 

@@ -111,16 +111,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             editText = itemView.findViewById(R.id.edit_text);
         }
 
-        public void bindData(final Post post){
+        public void bindData(Post post){
             //resetting values to default because of recycler view behaviour
-            postImage.setVisibility(View.GONE);
-            edit.setVisibility(View.GONE);
-            delete.setVisibility(View.GONE);
-            postImage.setImageBitmap(null);
-            editText.setText("");
-            editText.setVisibility(View.GONE);
-            editText.clearFocus();
-            postCaption.setText("");
+            resetToDefaultState();
 
             Typeface boldTypeface = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Lato-Bold.ttf");
             userId.setTypeface(boldTypeface);
@@ -136,6 +129,22 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                     delete.setVisibility(View.VISIBLE);
                 }
             }
+            addClickListeners(post);
+            timeStamp.setText(getTime(-(post.timeStamp)));
+        }
+
+        private void resetToDefaultState(){
+            postImage.setVisibility(View.GONE);
+            edit.setVisibility(View.GONE);
+            delete.setVisibility(View.GONE);
+            postImage.setImageBitmap(null);
+            editText.setText("");
+            editText.setVisibility(View.GONE);
+            editText.clearFocus();
+            postCaption.setText("");
+        }
+
+        private void addClickListeners(final Post post){
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -182,8 +191,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                     showKeyboard(editText);
                 }
             });
-
-            timeStamp.setText(getTime(-(post.timeStamp)));
         }
 
         private String getTime(Long timeStamp){
