@@ -52,14 +52,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         }
     }
 
-    public void addPostsToTop(ArrayList<Post> posts) {
-        for (int i = 0; i < posts.size(); i++) {
-            if (!this.posts.contains(posts.get(i))) {
-                this.posts.add(0, posts.get(i));
-                notifyItemInserted(i);
+    public void addPostsToTop(Post post) {
+            if (!this.posts.contains(post)) {
+                this.posts.add(0, post);
+                notifyItemInserted(0);
             }
         }
-    }
 
 
 

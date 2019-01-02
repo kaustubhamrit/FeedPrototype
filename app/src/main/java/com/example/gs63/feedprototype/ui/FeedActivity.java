@@ -27,6 +27,7 @@ import com.example.gs63.feedprototype.animators.SlideInLeftAnimator;
 import com.example.gs63.feedprototype.datamodels.Post;
 import com.example.gs63.feedprototype.utils.RecyclerViewEndlessScrollListener;
 import com.example.gs63.feedprototype.viewmodels.FeedViewModel;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,6 @@ public class FeedActivity extends AppCompatActivity {
     private PostsAdapter postsAdapter;
     private FeedViewModel mFeedViewModel;
     private LottieAnimationView loader;
-    private boolean itemUpdated = false;
-    private boolean itemCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,9 @@ public class FeedActivity extends AppCompatActivity {
         super.onActivityReenter(resultCode, data);
         overridePendingTransition(0,0);
         if(data.getBooleanExtra("POST_CREATED",false)){
-            itemCreated = true;
+            Gson gson = new Gson();
+            Post post = gson.fromJson(data.getStringExtra("POST"),Post.class);
+            postsAdapter.addPostsToTop(post);
         }
         Fade fade = new Fade();
         fade.excludeTarget(android.R.id.statusBarBackground, true);
@@ -122,28 +123,10 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable ArrayList<Post> posts) {
                 if(posts!=null) {
-                    if(!itemUpdated && !itemCreated) {
                         postsAdapter.addPosts(posts);
                         loader.cancelAnimation();
                         loader.setVisibility(View.GONE);
                     }
-                    else if(itemUpdated){
-                        itemUpdated = false;
-                    }
-                    else if(itemCreated){
-                        postsAdapter.addPostsToTop(posts);
-                        itemCreated = false;
-                    }
-                }
-            }
-        });
-
-        mFeedViewModel.updatingPost.observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if(aBoolean != null && aBoolean){
-                    itemUpdated = true;
-                }
             }
         });
 

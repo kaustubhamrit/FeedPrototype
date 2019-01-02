@@ -48,8 +48,9 @@ public class CreatePostViewModel extends ViewModel {
         return createPostFirebase.createPost(post);
     }
 
-    public void setImageUrl(){
+    public String setImageUrl(){
         this.imageUrl = uploadImageFirebase.imageUrl;
+        return imageUrl;
     }
 
     private byte[] compressImageAndConvertToByteArray(){

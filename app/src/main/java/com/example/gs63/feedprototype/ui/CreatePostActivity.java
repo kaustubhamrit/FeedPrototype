@@ -34,8 +34,11 @@ import android.widget.Toast;
 import com.airbnb.lottie.L;
 import com.bumptech.glide.Glide;
 import com.example.gs63.feedprototype.R;
+import com.example.gs63.feedprototype.datamodels.Post;
 import com.example.gs63.feedprototype.repository.CreatePostFirebase;
+import com.example.gs63.feedprototype.repository.SessionManager;
 import com.example.gs63.feedprototype.viewmodels.CreatePostViewModel;
+import com.google.gson.Gson;
 
 public class CreatePostActivity extends AppCompatActivity {
 
@@ -46,6 +49,7 @@ public class CreatePostActivity extends AppCompatActivity {
     private EditText postCaption;
     private TextView progressBar;
     private boolean postCreated = false;
+    private String imageUrl;
 
 
     @Override
@@ -180,7 +184,17 @@ public class CreatePostActivity extends AppCompatActivity {
     public void finishAfterTransition() {
         Intent intent = new Intent();
         if(postCreated){
-        intent.putExtra("POST_CREATED",true);
+            Gson gson = new Gson();
+            intent.putExtra("POST_CREATED",true);
+            Post post = new Post();
+        if(imageUrl!=null)
+        {
+            post.setImageUrl(imageUrl);
+        }
+        post.setTimeStamp(System.currentTimeMillis());
+        post.setUserId(SessionManager.getUserId());
+        post.setPostText(postCaption.getText().toString());
+        intent.putExtra("POST",gson.toJson(post));
         postCreated = false;
         }
         else{
@@ -203,7 +217,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         if (aBoolean != null && aBoolean) {
                             Glide.with(CreatePostActivity.this).load(createPostViewModel.imageUri).into(uploadedImage);
                             uploadedImage.setVisibility(View.VISIBLE);
-                            createPostViewModel.setImageUrl();
+                            imageUrl = createPostViewModel.setImageUrl();
                             //setting max length of caption to 50 in case of image posts
                             int maxLength = 50;
                             postCaption.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});

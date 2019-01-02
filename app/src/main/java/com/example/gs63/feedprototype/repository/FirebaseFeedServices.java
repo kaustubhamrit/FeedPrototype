@@ -56,9 +56,9 @@ public class FirebaseFeedServices {
 
     public MutableLiveData<ArrayList<Post>> fetchPosts() {
         if (lastFetchedKey != null) {
-            databaseReference.orderByChild("timeStamp").startAt(lastFetchedKey).limitToFirst(6).addValueEventListener(valueEventListener);
+            databaseReference.orderByChild("timeStamp").startAt(lastFetchedKey).limitToFirst(6).addListenerForSingleValueEvent(valueEventListener);
         } else {
-            databaseReference.orderByChild("timeStamp").limitToFirst(6).addValueEventListener(valueEventListener);
+            databaseReference.orderByChild("timeStamp").limitToFirst(6).addListenerForSingleValueEvent(valueEventListener);
         }
         return posts;
     }
