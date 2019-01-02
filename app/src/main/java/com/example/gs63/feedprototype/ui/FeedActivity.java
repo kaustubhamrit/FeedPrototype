@@ -87,12 +87,13 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mFeedViewModel.fetchPosts();
+                Toast.makeText(FeedActivity.this,"Loading more posts", Toast.LENGTH_SHORT).show();
                 }
 
             @Override
             public void onScrolled(RecyclerView view, int dx, int dy) {
                 super.onScrolled(view, dx, dy);
-                if(dy>50){
+                if(dy>300){
                     hideKeyBoard();
                 }
             }
@@ -129,7 +130,7 @@ public class FeedActivity extends AppCompatActivity {
                     else if(itemUpdated){
                         itemUpdated = false;
                     }
-                    else{
+                    else if(itemCreated){
                         postsAdapter.addPostsToTop(posts);
                         itemCreated = false;
                     }

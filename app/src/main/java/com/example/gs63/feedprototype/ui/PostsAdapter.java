@@ -142,6 +142,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             editText.setVisibility(View.GONE);
             editText.clearFocus();
             postCaption.setText("");
+            postCaption.setVisibility(View.VISIBLE);
         }
 
         private void addClickListeners(final Post post){

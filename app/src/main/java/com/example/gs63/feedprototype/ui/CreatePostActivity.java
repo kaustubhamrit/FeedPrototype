@@ -15,7 +15,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.transition.Fade;
 import android.view.KeyEvent;
 import android.view.View;
@@ -205,7 +207,7 @@ public class CreatePostActivity extends AppCompatActivity {
                             //setting max length of caption to 50 in case of image posts
                             int maxLength = 50;
                             postCaption.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
-
+                            setCharacterListener(postCaption);
                             if (postCaption.getText().toString().length() > 50) {
                                 Toast.makeText(CreatePostActivity.this, "Text for image post cannot be greater than 50 characters.Truncating post caption to 50 characters", Toast.LENGTH_LONG).show();
                                 postCaption.setText(postCaption.getText().toString().substring(0, 50));
@@ -224,6 +226,27 @@ public class CreatePostActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_slide_in_left, R.anim.slide_out_right);
+    }
+
+    private void setCharacterListener(EditText editText){
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().length()==50){
+                    Toast.makeText(CreatePostActivity.this, "Max length for image posts is 50", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }

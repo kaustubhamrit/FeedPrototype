@@ -36,7 +36,7 @@ public class FirebaseFeedServices {
                     list.add(child.getValue(Post.class));
                 }
 
-                if (list.size() > 0) {
+                if (list.size() > 0 && list.size()!=1) {
                     lastFetchedKey = list.get(list.size() - 1).getTimeStamp();
                 }
                 if (list.size() > 0) {
