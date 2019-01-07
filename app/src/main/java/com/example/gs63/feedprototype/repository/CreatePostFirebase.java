@@ -15,6 +15,12 @@ public class CreatePostFirebase {
     private DatabaseReference databaseReference;
     public MutableLiveData<Boolean> successfullyPosted = new MutableLiveData<>();
 
+    public String getPushKey() {
+        return pushKey;
+    }
+
+    private String pushKey = "";
+
     public CreatePostFirebase() {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("posts");
@@ -23,6 +29,7 @@ public class CreatePostFirebase {
     public MutableLiveData<Boolean> createPost(Post post){
         String pushPosition = databaseReference.push().getKey();
         post.setPushKey(pushPosition);
+        this.pushKey = pushPosition;
         databaseReference.child(pushPosition).setValue(post).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

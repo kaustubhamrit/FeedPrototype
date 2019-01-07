@@ -197,6 +197,7 @@ public class CreatePostActivity extends AppCompatActivity {
         post.setTimeStamp(System.currentTimeMillis());
         post.setUserId(SessionManager.getUserId());
         post.setPostText(postCaption.getText().toString());
+        post.setPushKey(createPostViewModel.getPushKey());
         intent.putExtra("POST",gson.toJson(post));
         postCreated = false;
         }

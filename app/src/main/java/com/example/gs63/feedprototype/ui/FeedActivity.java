@@ -90,6 +90,7 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mFeedViewModel.fetchPosts();
+                Toast.makeText(FeedActivity.this,"Loading more posts", Toast.LENGTH_SHORT).show();
                 }
 
             @Override

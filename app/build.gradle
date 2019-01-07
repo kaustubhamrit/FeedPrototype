@@ -4,6 +4,10 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         config {
+            keyAlias 'glynk_release_keystore'
+            keyPassword 'key1QaZXsW23EdCstore'
+            storeFile file('C:/Users/GS63/Downloads/glynk_release_keystore.jks')
+            storePassword 'key1QaZXsW23EdCstore'
         }
     }
     compileSdkVersion 28
@@ -14,12 +18,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 

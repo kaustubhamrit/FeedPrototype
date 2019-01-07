@@ -69,4 +69,8 @@ public class CreatePostViewModel extends ViewModel {
     public MutableLiveData<Integer> getProgress(){
         return uploadImageFirebase.progress;
     }
+
+    public String getPushKey(){
+        return createPostFirebase.getPushKey();
+    }
 }
