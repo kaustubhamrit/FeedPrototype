@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.transition.Fade;
 import android.view.KeyEvent;
@@ -72,12 +73,14 @@ public class CreatePostActivity extends AppCompatActivity {
     Typeface boldTypeface = Typeface.createFromAsset(getAssets(), "fonts/Lato-Bold.ttf");
     progressBar.setTypeface(boldTypeface);
     postCaption = findViewById(R.id.post_caption);
+    postCaption.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    postCaption.setRawInputType(InputType.TYPE_CLASS_TEXT);
 
     //adding listeners
     postCaption.setOnEditorActionListener(new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction (TextView v,int actionId, KeyEvent event){
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
+        if (actionId == EditorInfo.IME_ACTION_SEND) {
             hideKeyBoard();
             return true;
         }

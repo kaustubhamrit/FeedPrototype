@@ -79,12 +79,9 @@
             android:textColor="#4a434e"
             android:layout_marginTop="12dp"
             android:id="@+id/edit_text"
-            android:maxLines="1"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:background="@null"
             android:cursorVisible="true"
-            android:imeOptions="actionDone"
-            android:maxLength="50"
             android:layout_marginBottom="6dp"
             android:visibility="gone"
             android:textColorHint="#b8b8b8"/>

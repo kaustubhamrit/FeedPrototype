@@ -71,6 +71,8 @@ public class FeedActivity extends AppCompatActivity {
 
     private void bindView(){
         loader = findViewById(R.id.loader);
+        loader.useExperimentalHardwareAcceleration(true);
+        loader.enableMergePathsForKitKatAndAbove(true);
         postsList = findViewById(R.id.posts_list);
         postsList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         postsAdapter = new PostsAdapter(mFeedViewModel);
@@ -88,7 +90,6 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 mFeedViewModel.fetchPosts();
-                Toast.makeText(FeedActivity.this,"Loading more posts", Toast.LENGTH_SHORT).show();
                 }
 
             @Override

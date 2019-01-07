@@ -7,6 +7,10 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,6 +99,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
         private ImageView delete;
         private TextView edit;
         private EditText editText;
+        private TextWatcher textWatcher;
 
 
         public PostsViewHolder(@NonNull View itemView) {
@@ -107,12 +112,31 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             edit = itemView.findViewById(R.id.edit);
             delete = itemView.findViewById(R.id.delete);
             editText = itemView.findViewById(R.id.edit_text);
+            textWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(s.toString().length()==50){
+                        Toast.makeText(editText.getContext(), "Max length for image posts is 50", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
         }
 
         public void bindData(Post post){
             //resetting values to default because of recycler view behaviour
             resetToDefaultState();
-
+            editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
             Typeface boldTypeface = Typeface.createFromAsset(itemView.getContext().getAssets(), "fonts/Lato-Bold.ttf");
             userId.setTypeface(boldTypeface);
             userId.setText(post.getUserId());
@@ -127,12 +151,21 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
                     delete.setVisibility(View.VISIBLE);
                 }
             }
+            if(post.getImageUrl().isEmpty()){
+                editText.setFilters(new InputFilter[]{});
+                editText.removeTextChangedListener(textWatcher);
+            }
+            else{
+                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+                setCharacterListener(editText);
+            }
             addClickListeners(post);
             timeStamp.setText(getTime(-(post.timeStamp)));
         }
 
         private void resetToDefaultState(){
             postImage.setVisibility(View.GONE);
+            Glide.with(postImage).clear(postImage);
             edit.setVisibility(View.GONE);
             delete.setVisibility(View.GONE);
             postImage.setImageBitmap(null);
@@ -196,6 +229,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd HH:mm");
             Date resultdate = new Date(timeStamp);
             return  sdf.format(resultdate);
+        }
+
+        private void setCharacterListener(final EditText editText){
+            editText.addTextChangedListener(textWatcher);
         }
 
     }
