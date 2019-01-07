@@ -85,6 +85,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
     postsViewHolder.bindData(posts.get(i));
     }
 
+
     @Override
     public int getItemCount() {
         return posts.size();
@@ -144,20 +145,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             if(!post.getImageUrl().isEmpty()){
                 Glide.with(itemView.getContext()).load(post.getImageUrl()).into(postImage);
                 postImage.setVisibility(View.VISIBLE);
+                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+                setCharacterListener(editText);
+            }
+            else{
+                editText.setFilters(new InputFilter[]{});
             }
             if(SessionManager.getUserId().equalsIgnoreCase(post.getUserId())){
                 edit.setVisibility(View.VISIBLE);
                 if(post.getImageUrl().isEmpty()) {
                     delete.setVisibility(View.VISIBLE);
                 }
-            }
-            if(post.getImageUrl().isEmpty()){
-                editText.setFilters(new InputFilter[]{});
-                editText.removeTextChangedListener(textWatcher);
-            }
-            else{
-                editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
-                setCharacterListener(editText);
             }
             addClickListeners(post);
             timeStamp.setText(getTime(-(post.timeStamp)));
@@ -170,6 +168,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostsViewHol
             delete.setVisibility(View.GONE);
             postImage.setImageBitmap(null);
             editText.setText("");
+            editText.removeTextChangedListener(textWatcher);
             editText.setVisibility(View.GONE);
             editText.clearFocus();
             postCaption.setText("");
